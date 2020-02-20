@@ -84,18 +84,21 @@ namespace HashCode2020
 
                 foreach(var bookId in bookLine)
                 {
+                    if(library.Books.Any( b => b.Id == bookId))
+                        continue;
                     var book = new Book()
                     {
-                        Id = int.Parse(bookId),
+                        Id = bookId,
                         Score = bookScores[bookId]
                     };
+                    
                     library.Books.Add(book);
                 }
 
                 libraries.Add(library);
             }
 
-            libraries.OrderByDescending(x => x.Books.GroupBy(b => b.Id).Select(b => b.First()).Sum(b => b.Score) / (x.SignupDays + bookCount + x.ShippingCount));
+            libraries = libraries.OrderByDescending(x => x.Books.GroupBy(b => b.Id).Select(b => b.First()).Sum(b => b.Score) / (x.SignupDays + bookCount + x.ShippingCount)).ToList();            
 
             //Process
             var signupWitness = 0;
